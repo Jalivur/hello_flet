@@ -5,65 +5,78 @@ from time import sleep
 
 
 def main(page: ft.Page):
-    apellido_entry = ft.TextField(label="Apellido")
-    apellido_check= ft.Checkbox(value=True)
-    nombre_entry = ft.TextField(label="Nombre")
-    nombre_check= ft.Checkbox(value=True)
-    email_entry = ft.TextField(label="Email")
-    email_check= ft.Checkbox(value=False)
-    telefono_entry = ft.TextField(label="Telefono")
-    telefono_check= ft.Checkbox(value=False)
-    empresa_entry = ft.TextField(label="Empresa")
-    empresa_check= ft.Checkbox(value=False)
-    telefono_sec_entry = ft.TextField(label="Telefono Secundario")
-    telefono_sec_check= ft.Checkbox(value=False)
-    cumple_entry = ft.TextField(label="Cumpleaños")
-    cumple_check= ft.Checkbox(value=False)
-    resultados_vcard= ft.Text()
-    resultados_qr= ft.Text()
+    def change_status_entry(e):
+        email_entry.disabled= False if email_check.value else True
+        email_entry.expand=True if email_check.value else False
+        telefono_entry.disabled= False if telefono_check.value else True
+        telefono_entry.expand= True if telefono_check.value else False
+        empresa_entry.disabled= False if empresa_check.value else True
+        empresa_entry.expand= True if empresa_check.value else False
+        telefono_sec_entry.disabled= False if telefono_sec_check.value else True
+        telefono_sec_entry.expand= True if telefono_sec_check.value else False
+        cumple_entry.disabled= False if cumple_check.value else True
+        cumple_entry.expand= True if cumple_check.value else False
+        page.update()
+
+    apellido_check= ft.Checkbox(disabled=True, value=True)
+    apellido_entry = ft.TextField(expand=True, border_color="green" if apellido_check.value else "none" , label="Apellido")
+    nombre_check= ft.Checkbox(disabled=True, value=True)
+    nombre_entry = ft.TextField(expand=True, border_color="green" if apellido_check.value else "none", label="Nombre")
+    email_check= ft.Checkbox(value=False, on_change=change_status_entry)
+    email_entry = ft.TextField(border_color="green" if apellido_check.value else "none" , disabled=True,label="Email")
+    telefono_check= ft.Checkbox(value=False, on_change=change_status_entry)
+    telefono_entry = ft.TextField(border_color="green" if apellido_check.value else "none", disabled=True, label="Telefono")
+    empresa_check= ft.Checkbox(value=False, on_change=change_status_entry)
+    empresa_entry = ft.TextField(border_color="green" if apellido_check.value else "none", disabled=True, label="Empresa")
+    telefono_sec_check= ft.Checkbox(value=False, on_change=change_status_entry)
+    telefono_sec_entry = ft.TextField(border_color="green" if apellido_check.value else "none", disabled=True, label="Telefono Secundario")
+    cumple_check= ft.Checkbox(value=False, on_change=change_status_entry)
+    cumple_entry = ft.TextField(border_color="green" if apellido_check.value else "none", disabled=True, label="Cumpleaños")
+    resultados_vcard= ft.Text(expand=True)
+    resultados_qr= ft.Text(expand=True)
     
     # Lista para almacenar múltiples contactos en formato vCard
     contacts = []
     row1= ft.Row(
         [
-        apellido_entry,
-        apellido_check,
+            apellido_entry,
+            apellido_check,
         ]
     )
     row2= ft.Row(
         [
-        nombre_entry,
-        nombre_check,
+            nombre_entry,
+            nombre_check,
         ]
     )
     row3= ft.Row(
         [
-        email_entry,
-        email_check,
+            email_entry,
+            email_check,
         ]
     )
     row4= ft.Row(
         [
-        telefono_entry,
-        telefono_check,
+            telefono_entry,
+            telefono_check,
         ]
     )
     row5= ft.Row(
         [
-        empresa_entry,
-        empresa_check,
+            empresa_entry,
+            empresa_check,
         ]
     )
     row6= ft.Row(
         [
-        telefono_sec_entry,
-        telefono_sec_check,
+            telefono_sec_entry,
+            telefono_sec_check,
         ]
     )
     row7= ft.Row(
         [
-        cumple_entry,
-        cumple_check,
+            cumple_entry,
+            cumple_check,
         ]
     )
     def generate_qr(e):
@@ -98,7 +111,7 @@ def main(page: ft.Page):
     
     def create_vcard(apellido, nombre, email, telefono, empresa, telefono_sec, cumple):
         if nombre!="":        
-            vcard = f"BEGIN:VCARD\nVERSION:3.0\nN:{apellido};{nombre};;;\nFN:{nombre} {apellido}\n"
+            vcard = f"BEGIN:VCARD\nVERSION:3.0\nN:{apellido};{nombre}\nFN:{nombre} {apellido}\n"
             
             if email:
                 vcard += f"EMAIL:{email}\n"
@@ -160,6 +173,8 @@ def main(page: ft.Page):
         resultados_qr.value=""
         resultados_vcard.value=""
         page.update()
+
+
         
 
 
@@ -172,11 +187,32 @@ def main(page: ft.Page):
         row5,
         row6,
         row7,
-        ft.ElevatedButton("Generar Contacots", on_click=generate_qr),
-        ft.ElevatedButton("Gruardar Qr", on_click=save_qr_codes),
-        ft.ElevatedButton("Limpiar Contactos", on_click=clear_contacts),
-        resultados_vcard,
-        resultados_qr,
+        ft.Row(
+            [
+                ft.ElevatedButton(
+                    "Generar Contacots", 
+                    on_click=generate_qr, 
+                    expand=True,
+                ),
+                ft.ElevatedButton(
+                    "Gruardar Qr", 
+                    on_click=save_qr_codes, 
+                    expand=True,
+                ),
+                ft.ElevatedButton(
+                    "Limpiar Contactos", 
+                    on_click=clear_contacts, 
+                    expand=True,
+                ),
+            ]
+        ),
+        ft.Row(
+            [
+                resultados_vcard,
+                resultados_qr,
+            ]
+        ),
+        
         )
 
     
